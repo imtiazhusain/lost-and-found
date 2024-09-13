@@ -3,10 +3,10 @@ npm init
 
 
 
-install dependency as a dev dependency
-npm install -D <pakage-name>
+install dependency as a dev dependency and all @types definitions should be install as dev dependency
+npm install -D <package-name>
 
-ts-node // phly hm ts files ko compile krty they then un ko node k help say run krty they but ts-node pakage key help say ap ts files ko directly run kr paty no need of compile
+ts-node // phly hm ts files ko compile krty they then un ko node k help say run krty they but ts-node package key help say ap ts files ko directly run kr paty no need of compile
 
 npm install -D typescript nodemon ts-node @types/node
 
@@ -14,7 +14,7 @@ create tsconfig file
 npx tsc --init
 
 
-initize git 
+initialize git 
 git init
 create a gitignore file using gitignore extension by pressing ctrl shift  p and search gitignore and type node and press enter gitignore file will be created
 
