@@ -2,6 +2,8 @@ import express from 'express'
 import morgan from 'morgan'
 import connectDB from './config/db'
 import globalErrorHandler from './middlewares/errors/errorHandler'
+import userRoutes from './routes/user.routes'
+import {PORT} from './config/envConfig'
 const app = express()
 
 
@@ -12,10 +14,12 @@ connectDB()
 
 
 
+// Routes
+app.use('/api/user',userRoutes)
+
  // Global error handler
  app.use(globalErrorHandler);
 
-const PORT = 3000
 app.listen(PORT,()=>{
 console.log(`app is listening at http://localhost:${PORT}`)
 })

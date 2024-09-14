@@ -4,7 +4,7 @@ import { DATABASE_URL } from "./envConfig";
 const connectDB = async () => {
   try {
     mongoose.connection.on("connected", () => {
-      console.log("Connected to database successfully");
+      console.log("Database Connected...");
     });
 
     mongoose.connection.on("error", (err) => {
