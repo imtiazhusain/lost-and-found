@@ -49,4 +49,30 @@ const signupValidation =(body:IUserRegistrationBody)=>{
     return schema.validate(body)
 }
 
-export {loginValidation,signupValidation}
+const verifyEmailValidation = (body:{userId:string,OTP:string})=>{
+  const schema = Joi.object({
+      userId: Joi.string().required(),
+      OTP: Joi.string()
+        .length(4)
+        .pattern(/^[0-9]+$/)
+        .required()
+        .messages({
+          "string.pattern.base": "Invalid OTP",
+          "string.empty": "OTP field cannot be empty. Please provide OTP.",
+          "string.length": "Invalid OTP.",
+          "any.required": "Please provide the OTP to proceed",
+        }),
+  })
+
+  return schema.validate(body)
+}
+
+const sendOTPValidation = (body:{userEmail:string,userId:string})=>{
+  const schema =Joi.object({
+ userEmail: Joi.string().email().required(),
+      userId: Joi.string().required(),
+  })
+  return schema.validate(body)
+}
+
+export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation}

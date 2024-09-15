@@ -13,7 +13,7 @@ class CustomErrorHandler extends Error {
     return createHttpError(409,message) 
   }
 
-  static wrongCredentials(message:string = "Invalid username or password!") {
+  static wrongCredentials(message:string = "Invalid email or password") {
     return  createHttpError(401, message);
   }
 
@@ -27,6 +27,9 @@ class CustomErrorHandler extends Error {
 
   static invalidId(message:string) {
     return  createHttpError(422, message);
+  }
+  static serverError(){
+    return createHttpError(500,"Internal server error")
   }
 }
 

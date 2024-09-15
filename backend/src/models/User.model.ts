@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema<IUser>({
     country:{type:String,required:true},
     city:{type:String,required:true},
     phoneNo:{type:String,required:true},
-    isVerified:{type:Boolean,required:true}
+    isVerified:{type:Boolean,default:false}
 },{timestamps:true})
 
 const UserModel =  mongoose.model<IUser>('User',userSchema)

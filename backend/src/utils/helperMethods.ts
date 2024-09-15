@@ -1,4 +1,4 @@
-import path from "path";
+// import path from "path";
 import fs from "fs";
 
 class HelperMethods {
@@ -11,23 +11,23 @@ class HelperMethods {
     return otp;
   }
 
-  static deleteFileIfExists = (fileName:string) => {
+  static deleteFileIfExists = (filePath:string) => {
     // Resolve the file path from the base directory
 
-    const rootDirectory = path.resolve();
+    // const rootDirectory = path.resolve();
 
-    const res = path.join(
-      rootDirectory,
-      "backend",
-      "public",
-      "uploads",
-      fileName
-    );
+    // const res = path.join(
+    //   rootDirectory,
+    //   "backend",
+    //   "public",
+    //   "uploads",
+    //   fileName
+    // );
 
     // Check if the file exists
-    if (fs.existsSync(res)) {
+    if (fs.existsSync(filePath)) {
       // If the file exists, delete it
-      fs.unlink(res, (err) => {
+      fs.unlink(filePath, (err) => {
         if (err) {
           console.error("Error deleting the file:", err);
           return;

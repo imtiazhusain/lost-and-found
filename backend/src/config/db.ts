@@ -3,6 +3,10 @@ import { DATABASE_URL } from "./envConfig";
 
 const connectDB = async () => {
   try {
+    const options = {
+      
+      dbName: "lostAndFound",
+    };
     mongoose.connection.on("connected", () => {
       console.log("Database Connected...");
     });
@@ -11,7 +15,7 @@ const connectDB = async () => {
       console.log("Error in connecting to database.", err);
     });
 
-    await mongoose.connect(DATABASE_URL as string);
+    await mongoose.connect(DATABASE_URL as string,options);
   } catch (err) {
     console.error("Failed to connect to database.", err);
     process.exit(1);

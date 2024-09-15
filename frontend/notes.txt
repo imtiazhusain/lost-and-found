@@ -1,0 +1,7 @@
+Next js env variable
+Server-side: Any environment variable (including those without the NEXT_PUBLIC_ prefix) can be accessed in API routes or getServerSideProps/getStaticProps functions.
+Client-side: Only variables prefixed with NEXT_PUBLIC_ are embedded into the client-side JavaScript bundle and thus accessible in the browser.
+
+
+The event.target.files![0] ensures TypeScript knows that files is not null or undefined.
+            setInputs((values) => ({ ...values, [name]: event.target.files![0] }));
