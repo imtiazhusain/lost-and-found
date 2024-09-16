@@ -16,3 +16,12 @@ export interface IQuery{
   author:ObjectId,
   status?:string 
 }
+
+
+export interface IPostUpdateData {
+  description: string;
+  status: string;
+  image?: string | null; // Optional property
+  city: string;
+  country: string;
+}

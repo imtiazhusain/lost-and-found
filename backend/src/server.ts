@@ -21,6 +21,10 @@ connectDB()
 app.use('/api/user',userRoutes)
 app.use('/api/post',postRoutes)
 
+// all routes that does not match then this will be called but commented for deployment purpose because of we send index.html file if no path matched
+app.use("/api*", (req, res) => {
+  res.status(404).json({ status: "ERROR", message: "Invalid api endpoint" });
+});
  // Global error handler
  app.use(globalErrorHandler);
 

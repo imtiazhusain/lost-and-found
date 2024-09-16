@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import CustomErrorHandler from "../middlewares/errors/customErrorHandler";
-import { createPostValidation } from "../utils/joiValidation";
+import { createPostValidation, editPostValidation } from "../utils/joiValidation";
 import { UploadApiResponse } from "cloudinary";
 import cloudinary from "../config/cloundinary";
 import HelperMethods from "../utils/helperMethods";
 import PostModel from "../models/Post.model";
-import { IAuthRequest, IQuery } from "../interfaces/interfaces";
+import { IAuthRequest, IPostUpdateData, IQuery } from "../interfaces/interfaces";
+import mongoose from "mongoose";
+import extractPublicId from "../utils/extractPublicID";
 
 const createPost =async(req:Request,res:Response,next:NextFunction)=>{
     try {
@@ -120,4 +122,180 @@ const time = req.query.time as string | undefined; // Type assertion to simplify
   }
 }
 
-export {createPost,allPosts,userPosts}
+
+const getPost=async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    
+    const params = req.params
+
+    const isValidId = mongoose.Types.ObjectId.isValid(params._id)
+    if(!isValidId){
+      return next(createHttpError(403,"Invalid post ID"))
+    }
+
+    const post = await PostModel.findById(params._id).select('status description city country image')
+    if(!post) return next(CustomErrorHandler.notFound('Post not found'))
+
+      return res.status(200).json({
+        status:true,
+        postData:post
+      })
+  } catch (error) {
+    console.log(error)
+    return next(CustomErrorHandler.serverError())
+  }
+}
+
+
+const editPost =async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+
+        const params = req.params
+        if (!params._id) {
+        return next(createHttpError(403,"Post ID is missing"));
+      }
+      console.log(req.body)
+        const image = req?.file?.filename;
+
+      const { description,status,country,city } = req.body;
+
+      if (req?.body?.image) {
+        delete req.body.image;
+      }
+
+      // validation
+      const isValidID = mongoose.Types.ObjectId.isValid(params._id);
+
+      if (!isValidID) {
+        return next(CustomErrorHandler.invalidId("Invalid Post ID"));
+      }
+      const { error } = editPostValidation(req.body);
+
+      if (error) {
+        console.log(error.message);
+        return next(createHttpError(422,error.message));
+      }
+
+
+
+
+
+      
+
+      console.log(req?.file?.filename)
+      let uploadResult:UploadApiResponse | undefined
+       if(req?.file){
+        try {
+             const filePath = req.file?.path;
+                const fileFormat = req.file?.mimetype.split('/')[1]; // Get the format like 'png', 'jpeg' etc.
+            uploadResult = await cloudinary.uploader.upload(filePath, {
+        filename_override: image,  
+        folder: "user-posts",
+        format: fileFormat, // Ensure this is just the extension (e.g., 'jpg', 'png')
+    });
+
+
+    
+       HelperMethods.deleteFileIfExists(filePath);
+        } catch (error) {
+            console.log(error)
+            return next(createHttpError(500,'Internal server Error'))
+        }   
+
+
+        // deleting existing file from cloundinary
+        const postPreviousData = await PostModel.findById(params._id);
+
+      if (postPreviousData?.image) {
+        try {
+          
+    const result = await cloudinary.uploader.destroy(extractPublicId(postPreviousData.image));
+    console.log('Delete result:', result);
+    if (result.result === 'ok') {
+      console.log('File deleted successfully from cloundinary');
+    } else {
+      console.log('File could not be deleted from cloundinary');
+    }
+  } catch (error) {
+    console.error('Error deleting file: from cloundinary', error);
+  }
+      }
+       
+        }
+
+
+        console.log('working,,,,,,,')
+
+         const postUpdatedData:IPostUpdateData = {
+        description,
+        status,
+        ...(uploadResult &&{
+              image:uploadResult.secure_url 
+        }),
+        city,
+        country
+      };
+
+      if (!postUpdatedData?.image) {
+        delete postUpdatedData.image;
+      }
+
+      
+
+      const updatedPost = await PostModel.findByIdAndUpdate(
+        params._id,
+        postUpdatedData,
+        { new: true } // Return the updated document
+      );
+
+     console.log(updatedPost)
+      
+
+      
+
+
+
+      
+
+      return res.status(201).json({
+        status: true,
+        message: "Post updated successfully",
+        
+      });
+    
+
+    } catch (error) {
+     console.log(error)
+     return next(CustomErrorHandler.serverError())   
+    }
+}
+
+
+
+const deletePost=async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    
+    const params = req.params
+
+    const isValidId = mongoose.Types.ObjectId.isValid(params._id)
+    if(!isValidId){
+      return next(createHttpError(403,"Invalid post ID"))
+    }
+
+    const post = await PostModel.findByIdAndDelete(params._id)
+    if(!post) return next(CustomErrorHandler.notFound('Post not found'))
+
+      return res.status(200).json({
+        status:true,
+        postData:post
+      })
+  } catch (error) {
+    console.log(error)
+    return next(CustomErrorHandler.serverError())
+  }
+}
+
+
+
+
+export {createPost,allPosts,userPosts,getPost,editPost,deletePost}

@@ -88,4 +88,16 @@ const schema = Joi.object({
 return schema.validate(body)
 }
 
-export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation,createPostValidation}
+
+const editPostValidation= (body:IPost)=>{
+const schema = Joi.object({
+  
+    status:Joi.string().required().label("Status"),
+    description:Joi.string().required().label("Description"),
+    city:Joi.string().required().label("city"),
+    country:Joi.string().required().label("country")
+})
+return schema.validate(body)
+}
+
+export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation,createPostValidation,editPostValidation}

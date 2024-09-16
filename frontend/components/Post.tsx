@@ -3,9 +3,25 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { IPost } from '@/app/interfaces'
 import convertToDate from '@/lib/convertToDate'
 import Image from 'next/image'
-import { Building2, Flag, Mail, Phone } from 'lucide-react'
+import { Building2, Edit, EllipsisVertical, Flag, Mail, Phone, Trash2 } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
+import Link from 'next/link'
 
-const Post = ({ post }: { post: IPost }) => {
+
+
+
+
+
+interface PostProps {
+    post: IPost;
+    showActions: boolean;
+    deletePost: (id: string) => void;
+    deletePostLoading: boolean
+}
+
+const Post: React.FC<PostProps> = ({ post, showActions, deletePost, deletePostLoading }) => {
+
+
     return (
         <div className="rounded-md   bg-white  shadow-md transition-all duration-300 animate-fadeIn  p-4 space-y-3 max-w-[450px]">
             <div className='flex items-center justify-between'>
@@ -22,11 +38,36 @@ const Post = ({ post }: { post: IPost }) => {
                         <h4 className="text-gray-400 text-xs">{convertToDate(post.createdAt)}</h4>
                     </div>
                 </div>
-                {post.status === "Found" ? (<span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    {post.status}
-                </span>) : (<span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                    {post.status}
-                </span>)}
+                <div className='flex items-center'>
+
+                    {post.status === "Found" ? (<span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                        {post.status}
+                    </span>) : (<span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                        {post.status}
+                    </span>)}
+
+                    {showActions && (<DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <EllipsisVertical className='text-gray-500' />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator /> */}
+                            <DropdownMenuItem className="cursor-pointer " onClick={() => deletePost(post._id)}>
+                                <Trash2 className="mr-2 h-4 w-4 text-red-500" />
+                                <span className='text-red-500'>{deletePostLoading ? "Deleting..." : "Delete"}</span>
+                            </DropdownMenuItem>
+                            <Link href={`/posts/${post._id}`}>
+                                <DropdownMenuItem className="cursor-pointer" >
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    <span>Edit</span>
+                                </DropdownMenuItem>
+                            </Link>
+
+                        </DropdownMenuContent>
+                    </DropdownMenu>)}
+
+                </div>
 
             </div>
 

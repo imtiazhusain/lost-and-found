@@ -1,4 +1,4 @@
-import { IAddPostErrors, IAddPostInputs, ISignUpErrors, ISignUpInputs } from "@/app/interfaces";
+import { IAddPostErrors, IEditPostInputs, ISignUpErrors, ISignUpInputs } from "@/app/interfaces";
 
 export function isPasswordValid(password:string) {
   // Check for at least one uppercase letter
@@ -100,7 +100,7 @@ export default function validateInputs(inputs :ISignUpInputs, setIsErrors:React.
 
 
 
-export function validatePostInputs(inputs :IAddPostInputs, setIsErrors:React.Dispatch<React.SetStateAction<IAddPostErrors>>) {
+export function validatePostInputs(inputs :IEditPostInputs, setIsErrors:React.Dispatch<React.SetStateAction<IAddPostErrors>>) {
   const newErrors :IAddPostErrors = {
     image: '',
     description: '',

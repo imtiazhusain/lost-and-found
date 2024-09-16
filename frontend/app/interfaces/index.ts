@@ -32,6 +32,15 @@ export interface IAddPostInputs {
 }
 
 
+export interface IEditPostInputs {
+    image: File | string |null,
+    description: string
+    status: string,
+    country:string,
+    city:string,
+    
+}
+
 export interface IAddPostErrors {
     image: string,
     description: string
