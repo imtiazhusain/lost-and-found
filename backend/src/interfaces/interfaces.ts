@@ -10,3 +10,9 @@ export interface ITokenPayload {
 export interface IAuthRequest extends Request {
   _id: ObjectId;
 }
+
+
+export interface IQuery{
+  author:ObjectId,
+  status?:string 
+}

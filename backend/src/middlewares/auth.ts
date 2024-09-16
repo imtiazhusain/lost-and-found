@@ -1,9 +1,9 @@
-import CustomErrorHandler from "./errors/customErrorHandler.js";
+import CustomErrorHandler from "./errors/customErrorHandler";
 import jwt from "jsonwebtoken";
-import { ACCESS_TOKEN_SECRET } from "../config/envConfig.js";
+import { ACCESS_TOKEN_SECRET } from "../config/envConfig";
 import { Request,Response,NextFunction } from "express";
 import createHttpError from "http-errors";
-import { IAuthRequest, ITokenPayload } from "../interfaces/interfaces.js";
+import { IAuthRequest, ITokenPayload } from "../interfaces/interfaces";
 
 
 const auth = async (req:Request, res:Response, next:NextFunction) => {

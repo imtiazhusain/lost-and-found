@@ -1,4 +1,4 @@
-import { ISignUpErrors, ISignUpInputs } from "@/app/interfaces";
+import { IAddPostErrors, IAddPostInputs, ISignUpErrors, ISignUpInputs } from "@/app/interfaces";
 
 export function isPasswordValid(password:string) {
   // Check for at least one uppercase letter
@@ -90,6 +90,51 @@ export default function validateInputs(inputs :ISignUpInputs, setIsErrors:React.
   if(inputs.phoneNo && !validatePhoneNumber(inputs.phoneNo)){
     newErrors.phoneNo="please provide valid phone number"
   }
+
+  setIsErrors(newErrors);
+  if (Object.values(newErrors).some((error) => error !== "")) {
+    return true;
+  }
+  return false;
+}
+
+
+
+export function validatePostInputs(inputs :IAddPostInputs, setIsErrors:React.Dispatch<React.SetStateAction<IAddPostErrors>>) {
+  const newErrors :IAddPostErrors = {
+    image: '',
+    description: '',
+        status: '',
+        country: '',
+        city: ''
+    }
+        ;
+  if (!inputs.description) {
+    newErrors.description = "Description is required";
+  }
+
+   if (!inputs.status) {
+    newErrors.status = "Status is required";
+  }
+
+   if (!inputs.image) {
+    newErrors.image = "Image is required";
+  }
+
+    if (!inputs.country) {
+    newErrors.country = "Country is required";
+  }
+
+  if (!inputs.city) {
+    newErrors.city = "Country is required";
+  }
+
+  if (inputs.description && inputs.description.length <= 10) {
+    newErrors.description = "description should be at least 10 characters";
+  }
+
+ 
+
 
   setIsErrors(newErrors);
   if (Object.values(newErrors).some((error) => error !== "")) {

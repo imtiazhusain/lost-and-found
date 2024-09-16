@@ -18,15 +18,14 @@ try {
       req.body.profilePic = req?.file?.filename;
       const profilePic = req.body.profilePic;
 
-      const { name, email, password,country,city,phoneNo } = req.body;
       // validation
-
       const { error } = signupValidation(req.body);
-
+      
       if (error) {
         console.log(error.message);
         return next(createHttpError(422,error.message));
       }
+      const { name, email, password,country,city,phoneNo } = req.body;
 
       const exist = await UserModel.exists({ email: email });
 
@@ -135,10 +134,7 @@ const accessToken = jwt.sign({_id:user._id}, ACCESS_TOKEN_SECRET as string, {
       expiresIn: "30d",
     });
 
-      user.profilePic = `${
-        process.env.SERVER_URL ? process.env.SERVER_URL : ""
-      }/images/uploads/${user.profilePic}`;
-
+    
       const userData = {
         _id: user._id,
         email: user.email,

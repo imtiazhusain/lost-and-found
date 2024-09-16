@@ -37,6 +37,7 @@ const globalReducer = (state: IGlobal, action: IActionType): IGlobal => {
             // Ensure the payload is of type IUser or null before setting it
             return { ...state, user: action.payload as IUser | null };
         case "LOGOUT_USER":
+            localStorage.removeItem('userInfo')
             return { ...state, user: null };
         default:
             throw new Error(`Unhandled action type: ${action.type}`);

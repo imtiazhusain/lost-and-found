@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import IPost from '../types/Post.type'
 
 const loginValidation=(body:{email:string,password:string})=>{
     const schema =  Joi.object({
@@ -75,4 +76,16 @@ const sendOTPValidation = (body:{userEmail:string,userId:string})=>{
   return schema.validate(body)
 }
 
-export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation}
+const createPostValidation= (body:IPost)=>{
+const schema = Joi.object({
+
+    image:Joi.string().required().label("Post Image"),
+    status:Joi.string().required().label("Status"),
+    description:Joi.string().required().label("Description"),
+    city:Joi.string().required().label("city"),
+    country:Joi.string().required().label("country")
+})
+return schema.validate(body)
+}
+
+export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation,createPostValidation}
