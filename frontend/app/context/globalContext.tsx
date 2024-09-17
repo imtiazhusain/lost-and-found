@@ -1,26 +1,27 @@
 'use client'
 import { createContext, ReactNode, useContext, useReducer } from 'react'
+import { IActionType, IGlobal, IUser } from '../interfaces';
 
 
 
 
 
-interface IUser {
-    _id: string;
-    name: string;
-    email: string;
-    profilePic: string;
-    accessToken: string;
-}
+// interface IUser {
+//     _id: string;
+//     name: string;
+//     email: string;
+//     profilePic: string;
+//     accessToken: string;
+// }
 
-interface IGlobal {
-    user: IUser | null;
-}
+// interface IGlobal {
+//     user: IUser | null;
+// }
 
-type IActionType = {
-    type: string;
-    payload?: IUser | null;
-};
+// interface IActionType {
+//     type: string;
+//     payload?: IUser | null;
+// };
 
 
 const defaultState: IGlobal = { user: null };

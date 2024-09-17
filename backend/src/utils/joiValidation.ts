@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import IPost from '../types/Post.type'
+import { IUserRegistrationBody } from '../interfaces/interfaces'
 
 const loginValidation=(body:{email:string,password:string})=>{
     const schema =  Joi.object({
@@ -9,17 +10,6 @@ const loginValidation=(body:{email:string,password:string})=>{
     return schema.validate(body)
 }
 
-
-
-interface IUserRegistrationBody {
- name:string,
-    email:string,
-    password:string,
-    profilePic:string,
-    phoneNo:string,
-    country:string,
-    city:string,
-}
 
 const signupValidation =(body:IUserRegistrationBody)=>{
      const schema = Joi.object({
@@ -49,6 +39,33 @@ const signupValidation =(body:IUserRegistrationBody)=>{
 
     return schema.validate(body)
 }
+
+
+ const editUserValidation = (body:{email:string,password:string,name:string,_id:string}) =>{
+    const schema = Joi.object({
+      name: Joi.string().min(2).max(30).required().label("Name"),
+      email: Joi.string().email().required().label("Email"),
+      _id: Joi.string().required().label("User ID"),
+      password: Joi.string()
+        .optional() // Makes the field optional
+        .allow("") // Explicitly allow an empty string
+        .pattern(
+          new RegExp(
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*[~`!@#$%^&*()_+\\-=\\[\\]{};:'\"\\\\|,.<>\\/?]).{8,30}$"
+          )
+        )
+        .messages({
+          "string.pattern.base":
+            "Password must have 8-30 chars, 1 uppercase, 1 lowercase, and 1 special character",
+          "string.empty": "Please provide password",
+          "string.length": "Password must be between 8 and 30 characters long",
+          "any.required": "Password field is required",
+        })
+        .label("Password"),
+    });
+
+    return schema.validate(body);
+  }
 
 const verifyEmailValidation = (body:{userId:string,OTP:string})=>{
   const schema = Joi.object({
@@ -100,4 +117,7 @@ const schema = Joi.object({
 return schema.validate(body)
 }
 
-export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation,createPostValidation,editPostValidation}
+
+
+
+export {loginValidation,signupValidation,verifyEmailValidation,sendOTPValidation,createPostValidation,editPostValidation,editUserValidation}

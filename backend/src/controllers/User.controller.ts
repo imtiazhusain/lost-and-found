@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-import {loginValidation,sendOTPValidation,signupValidation,verifyEmailValidation} from '../utils/joiValidation'
+import {editUserValidation, loginValidation,sendOTPValidation,signupValidation,verifyEmailValidation} from '../utils/joiValidation'
 import UserModel from "../models/User.model";
 import CustomErrorHandler from "../middlewares/errors/customErrorHandler";
 import bcrypt from 'bcrypt'
@@ -12,6 +12,8 @@ import jwt from 'jsonwebtoken'
 import cloudinary from "../config/cloundinary";
 import { UploadApiResponse } from "cloudinary";
 import mongoose from "mongoose";
+import { IEditUser } from "../interfaces/interfaces";
+import extractPublicId from "../utils/extractPublicID";
 const createUser=async (req:Request,res:Response,next:NextFunction)=>{
 try {
 
@@ -287,4 +289,128 @@ const sendOTP = async (req:Request, res:Response, next:NextFunction) => {
   };
 
 
-export {createUser,login,verifyUser,sendOTP}
+
+const editUser = async (req:Request, res:Response, next:NextFunction) => {
+    try {
+      // here i also comment 2 lines bcz i am not using multer here
+      // req.body.profile_pic = req?.file?.filename;
+      const profilePic = req?.file?.filename;
+
+      const { name, email, _id, password } = req.body;
+
+      if (req?.body?.profilePic) {
+        delete req.body.profilePic;
+      }
+      console.log(_id)
+      // validation
+      const isValidID = mongoose.Types.ObjectId.isValid(_id);
+
+      if (!isValidID) {
+        return next(CustomErrorHandler.invalidId("Invalid user ID"));
+      }
+      const { error } = editUserValidation(req.body);
+
+      if (error) {
+        console.log(error.message);
+        return next(error);
+      }
+
+      const exist = await UserModel.exists({
+        email: email,
+        _id: { $ne: _id },
+      });
+
+      if (exist) {
+        return next(
+          CustomErrorHandler.alreadyExist("This email is already taken")
+        );
+      }
+
+      let hashedPassword;
+      if (password) {
+        hashedPassword = await bcrypt.hash(password, 10);
+      }
+
+
+       let uploadResult:UploadApiResponse | undefined
+       if(req?.file){
+        try {
+             const filePath = req.file?.path;
+             const fileFormat = req.file?.mimetype.split('/')[1]; // Get the format like 'png', 'jpeg' etc.
+            uploadResult = await cloudinary.uploader.upload(filePath, {
+              filename_override: profilePic,  
+              folder: "user-posts",
+              format: fileFormat, // Ensure this is just the extension (e.g., 'jpg', 'png')
+        });
+
+
+    
+       HelperMethods.deleteFileIfExists(filePath);
+        } catch (error) {
+            console.log(error)
+            return next(createHttpError(500,'Internal server Error'))
+        }   
+
+
+        // deleting existing file from cloundinary
+        const postPreviousData = await UserModel.findById(_id);
+
+      if (postPreviousData?.profilePic) {
+        try {
+          
+      const result = await cloudinary.uploader.destroy(extractPublicId(postPreviousData.profilePic));
+      console.log('Delete result:', result);
+      if (result.result === 'ok') {
+      console.log('File deleted successfully from cloundinary');
+      } else {
+      console.log('File could not be deleted from cloundinary');
+      }
+      } catch (error) {
+      console.error('Error deleting file: from cloundinary', error);
+      }
+      }
+       
+      }
+
+      const userUpdatedData:IEditUser = {
+        name: name,
+        email: email,
+        ...(hashedPassword && { password: hashedPassword }),
+         ...(uploadResult &&{
+              profilePic:uploadResult.secure_url 
+        }),
+      };
+
+      if (!userUpdatedData?.profilePic) {
+        delete userUpdatedData.profilePic;
+      }
+
+      
+
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        _id,
+        userUpdatedData,
+        { new: true } // Return the updated document
+      );
+
+     if(!updatedUser) return createHttpError(CustomErrorHandler.notFound('User not found'))
+
+      const userData = {
+        email: updatedUser.email,
+        name: updatedUser.name,
+        profilePic: updatedUser.profilePic,
+      };
+
+      return res.status(201).json({
+        status: "success",
+        message: "User updated successfully",
+        data: userData,
+      });
+    } catch (error) {
+      console.log(error);
+      return next(error);
+    }
+  };
+
+
+export {createUser,login,verifyUser,sendOTP,editUser}

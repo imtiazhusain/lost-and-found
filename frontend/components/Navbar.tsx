@@ -6,6 +6,7 @@ import { LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, } from "next/navigation";
 import { useGlobalState } from "@/app/context/globalContext";
+import ProfileModel from "./ProfileModel";
 
 
 
@@ -17,6 +18,8 @@ const Navbar = () => {
   console.log(user)
   const pathname = usePathname();
   const [isClicked, setIsClicked] = useState(false)
+  const [openProfileModel, setOpenProfileModel] = useState(false);
+
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -34,6 +37,10 @@ const Navbar = () => {
     console.log('logout user clicked')
     dispatch({ type: 'LOGOUT_USER' })
   }
+
+  const handleEditProfile = () => {
+    setOpenProfileModel(true);
+  };
   return (
     <nav className="bg-gray-800 sticky top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -121,7 +128,8 @@ const Navbar = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer ">
+
+                <DropdownMenuItem className="cursor-pointer " onClick={handleEditProfile}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
@@ -159,6 +167,10 @@ const Navbar = () => {
 
           </div>
         </div>
+      )}
+
+      {openProfileModel && (
+        <ProfileModel setOpenProfileModel={setOpenProfileModel} />
       )}
     </nav>
   );

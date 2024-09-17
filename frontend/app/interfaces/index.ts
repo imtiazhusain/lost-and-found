@@ -1,3 +1,21 @@
+export interface IUser {
+    _id: string;
+    name: string;
+    email: string;
+    profilePic: string;
+    accessToken: string;
+}
+
+export interface IGlobal {
+    user: IUser | null;
+}
+
+export interface IActionType {
+    type: string;
+    payload?: IUser | null;
+};
+
+
 export interface ISignUpInputs {
     name: string
     email: string,
@@ -72,4 +90,14 @@ export interface IPost{
             createdAt:string,
             updatedAt: string
         
+}
+
+
+export interface IEditUser{
+    
+    _id: string,
+    name:string,
+    email:string,
+    profilePic: File | string | null,
+    password:string
 }

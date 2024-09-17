@@ -6,7 +6,7 @@ import { UploadApiResponse } from "cloudinary";
 import cloudinary from "../config/cloundinary";
 import HelperMethods from "../utils/helperMethods";
 import PostModel from "../models/Post.model";
-import { IAuthRequest, IPostUpdateData, IQuery } from "../interfaces/interfaces";
+import { IAllPostQuery, IAuthRequest, IPostUpdateData, IQuery } from "../interfaces/interfaces";
 import mongoose from "mongoose";
 import extractPublicId from "../utils/extractPublicID";
 
@@ -75,7 +75,33 @@ const createPost =async(req:Request,res:Response,next:NextFunction)=>{
 
 const allPosts = async (req:Request,res:Response,next:NextFunction)=>{
   try {
-    const posts = await PostModel.find({}).populate({path:'author',select:'name profilePic country city email phoneNo'}).select('-__v')
+    
+
+
+        const { status, time = 'Latest', country, city } = req.query as {
+      status?: string;
+      time?: string;
+      country?: string;
+      city?: string;
+    };
+
+    console.log(status);
+    console.log(time);
+
+    // Constructing the query object
+    const query: IAllPostQuery = {
+      ...(status && { status }),
+         ...(country && { country: { $regex: country, $options: 'i' } }), // Case-insensitive search
+      ...(city && { city: { $regex: city, $options: 'i' } }), 
+    };
+
+    const sortOrder = time === 'Latest' ? -1 : 1;
+
+
+     const posts = await PostModel.find(query)
+      .populate({ path: 'author', select: 'name profilePic country city email phoneNo' })
+      .select('-__v')
+      .sort({ createdAt: sortOrder });
     return res.status(200).json({
       status:true,
       postsData:posts
@@ -90,28 +116,52 @@ const allPosts = async (req:Request,res:Response,next:NextFunction)=>{
 
 const userPosts = async (req:Request,res:Response,next:NextFunction)=>{
   try {
-    // const {status,time} = req.query
-    const status = req.query.status as string | undefined; // Type assertion to simplify
-const time = req.query.time as string | undefined; // Type assertion to simplify
+//     const status = req.query.status as string | undefined; // Type assertion to simplify
+// const time = req.query.time as string | undefined; // Type assertion to simplify
 
-    console.log(status)
-    console.log(time)
-    const _req = req as IAuthRequest
+//     console.log(status)
+//     console.log(time)
+//     const _req = req as IAuthRequest
 
-    const query:IQuery={
-      author:_req._id
-    }
-
-    if(status){
-      query.status= status
-    }
-
-    // const sortBy:number = -1
-    // if(time){
-    //   sortBy = time === "Latest"? -1: 1
+    // const query:IQuery={
+    //   author:_req._id
     // }
 
-    const posts = await PostModel.find(query).populate({path:'author',select:'name profilePic country city email phoneNo'}).select('-__v').sort({createdAt: time === 'Latest' ? -1 : 1})
+//     if(status){
+//       query.status= status
+//     }
+
+    
+
+//     const posts = await PostModel.find(query).populate({path:'author',select:'name profilePic country city email phoneNo'}).select('-__v').sort({createdAt: time === 'Latest' ? -1 : 1})
+
+
+
+ const { status, time = 'Latest', country, city } = req.query as {
+      status?: string;
+      time?: string;
+      country?: string;
+      city?: string;
+    };
+
+   
+
+    const _req = req as IAuthRequest
+
+    // Constructing the query object
+    const query: IQuery = {
+        author:_req._id ,
+      ...(status && { status }),
+         ...(country && { country: { $regex: country, $options: 'i' } }), // Case-insensitive search
+      ...(city && { city: { $regex: city, $options: 'i' } }), 
+    };
+
+    const sortOrder = time === 'Latest' ? -1 : 1;
+
+     const posts = await PostModel.find(query)
+      .populate({ path: 'author', select: 'name profilePic country city email phoneNo' })
+      .select('-__v')
+      .sort({ createdAt: sortOrder });
     return res.status(200).json({
       status:true,
       postsData:posts

@@ -9,6 +9,7 @@ import { IAddPostErrors, IAddPostInputs, } from '@/app/interfaces';
 import { validatePostInputs } from '@/lib/validateInputs';
 import Image from 'next/image';
 import { useGlobalState } from '@/app/context/globalContext';
+import ProtectedRoute from '@/components/ProtectedRoutes';
 
 const page = () => {
     const { state } = useGlobalState()
@@ -282,4 +283,5 @@ const page = () => {
     )
 }
 
-export default page
+
+export default ProtectedRoute(page);

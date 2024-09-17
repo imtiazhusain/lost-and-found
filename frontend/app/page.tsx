@@ -6,12 +6,16 @@ import axios from "axios";
 import Post from "@/components/Post";
 import LoadingPosts from "@/components/LoadingPosts";
 import { IPost } from "./interfaces";
+import Filter from "@/components/Filter";
 
 
 
 export default function Home() {
   const [posts, setPosts] = useState<Array<IPost>>([])
   const [loading, setLoading] = useState(false)
+  const [openFilter, setOpenFilter] = useState(false)
+  const [filterQuery, setFilterQuery] = useState({ status: '', time: 'Latest', place: '', placeValue: '' })
+
 
 
   useEffect(() => {
@@ -19,7 +23,7 @@ export default function Home() {
       setLoading(true)
       try {
 
-        const response = await _axios.get('/post/all')
+        const response = await _axios.get(`/post/all?status=${filterQuery.status}&time=${filterQuery.time}&${filterQuery.place}=${filterQuery.placeValue}`)
         console.log(response)
         setPosts(response.data.postsData)
       } catch (error) {
@@ -56,19 +60,37 @@ export default function Home() {
     fetchPosts()
 
 
-  }, [])
+  }, [filterQuery])
+
+  function setFilterValue(query: string) {
 
 
-  console.log(posts)
+    const [name, value] = query.split(':')
+    setFilterQuery(pre => ({ ...pre, [name]: value }))
+
+
+  }
+
+  const placeValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target
+    setFilterQuery(pre => ({ ...pre, [name]: value }))
+  }
+
+  useEffect(() => {
+    console.log(filterQuery)
+  }, [filterQuery])
+
+
   return (
 
     <div className="mt-16 container mx-auto px-4 sm:px-6 lg:px-8  ">
       <h1 className="text-center text-[4vw] text-gray-600 mb-5">Latest <span className="text-red-500">Posts</span> </h1>
 
+      <Filter setOpenFilter={setOpenFilter} openFilter={openFilter} setFilterValue={setFilterValue} placeValueChange={placeValueChange} filterQuery={filterQuery} />
       <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))]    gap-y-6 gap-x-5 lg:gap-x-8 place-content-center  place-items-center ">
         {loading ? <LoadingPosts /> : (
           posts?.length > 0 ?
-            posts.map(post => <Post post={post} />) :
+            posts.map(post => <Post post={post} showActions={false} />) :
             (
               <span className="text-gray-500">No Posts Found</span>
 

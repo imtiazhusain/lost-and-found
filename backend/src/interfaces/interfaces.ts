@@ -12,9 +12,22 @@ export interface IAuthRequest extends Request {
 }
 
 
+export interface IUserRegistrationBody {
+ name:string,
+    email:string,
+    password:string,
+    profilePic:string,
+    phoneNo:string,
+    country:string,
+    city:string,
+}
+
+
 export interface IQuery{
   author:ObjectId,
-  status?:string 
+  status?:string,
+  country?: string | { $regex: string; $options: string };
+  city?: string | { $regex: string; $options: string }; 
 }
 
 
@@ -24,4 +37,22 @@ export interface IPostUpdateData {
   image?: string | null; // Optional property
   city: string;
   country: string;
+}
+
+
+
+export interface IEditUser {
+    name:string,
+    email:string,
+    profilePic?:string |null,
+    password?:string
+}
+
+
+
+
+export interface IAllPostQuery {
+  status?: string;
+  country?: string | { $regex: string; $options: string };
+  city?: string | { $regex: string; $options: string };
 }
