@@ -27,10 +27,10 @@ const Filter: React.FC<FilterProps> = ({ setOpenFilter, openFilter, setFilterVal
                     <SlidersHorizontal className="mr-2 h-4 w-4" /> Filter
                 </Button>
             </div>
-            {openFilter && (<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {openFilter && (<div className="grid grid-cols-1 sm:grid-cols-12 md:grid-cols-12 gap-4">
 
 
-                <div className='flex gap-3'>
+                <div className='flex gap-3 sm:col-span-full  md:col-span-6'>
                     <Select onValueChange={setFilterValue}  >
                         <SelectTrigger className="" >
                             <SelectValue placeholder="Search By" />
@@ -62,27 +62,32 @@ const Filter: React.FC<FilterProps> = ({ setOpenFilter, openFilter, setFilterVal
                 </div>
 
 
+                <div className='sm:col-span-6 md:col-span-3'>
 
-                <Select onValueChange={setFilterValue}  >
-                    <SelectTrigger className="" >
-                        <SelectValue placeholder="Search By Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="status:Lost">Lost</SelectItem>
-                        <SelectItem value="status:Found">Found</SelectItem>
-                    </SelectContent>
-                </Select>
+                    <Select onValueChange={setFilterValue}  >
+                        <SelectTrigger className="" >
+                            <SelectValue placeholder="Search By Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="status:Lost">Lost</SelectItem>
+                            <SelectItem value="status:Found">Found</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
 
 
-                <Select onValueChange={setFilterValue} value="time:Latest" >
-                    <SelectTrigger className="" >
-                        <SelectValue placeholder="Search By Time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="time:Latest">Latest</SelectItem>
-                        <SelectItem value="time:Oldest">Oldest</SelectItem>
-                    </SelectContent>
-                </Select>
+                <div className='sm:col-span-6 md:col-span-3'>
+
+                    <Select onValueChange={setFilterValue} value="time:Latest" >
+                        <SelectTrigger className="" >
+                            <SelectValue placeholder="Search By Time" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="time:Latest">Latest</SelectItem>
+                            <SelectItem value="time:Oldest">Oldest</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
 
 
 

@@ -127,7 +127,7 @@ const page = () => {
 
     return (
         <div className=' flex-grow flex items-center justify-center'>
-            <div className="bg-white w-80 border border-gray-300  p-4 rounded-md ">
+            <div className="bg-white w-80   p-4 rounded-md shadow-md">
                 <h1 className=" text-center font-bold text-2xl tracking-wide ">
                     Welcome Back!
                 </h1>

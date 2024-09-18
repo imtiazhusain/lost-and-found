@@ -117,8 +117,8 @@ const page = () => {
         }
     };
     return (
-        <div className=' flex-grow flex items-center justify-center'>
-            <div className=" bg-white w-80 border border-gray-300 md:w-[600px]  p-4 rounded-md my-4 md:my-0">
+        <div className=" flex-grow flex items-center justify-center   ">
+            <div className=" bg-white w-80  md:w-[600px]  p-4 rounded-md my-4 md:my-0 shadow-md">
                 <div className="mb-4">
                     <h1 className="font-bold text-base sm:text-2xl md:text-xl tracking-wide text-center">
                         New Here ? Sign up now!

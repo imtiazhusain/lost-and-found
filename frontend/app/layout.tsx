@@ -4,7 +4,6 @@ import "./globals.css";
 import { Toaster } from "sonner"
 import { GlobalStateProvider } from "./context/globalContext";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-200 font-outFit`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100 font-outFit`}
       >
         <Toaster richColors position="top-right" />
         <GlobalStateProvider>
@@ -38,7 +37,6 @@ export default function RootLayout({
 
             <Navbar />
             {children}
-            <Footer />
           </main>
         </GlobalStateProvider>
 

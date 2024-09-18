@@ -86,15 +86,15 @@ const Post: React.FC<PostProps> = ({ post, showActions, deletePost, deletePostLo
 
             {user ? (<div className='space-y-2'>
                 <h3>Contact Details</h3>
-                <div className='flex justify-between items-center '>
+                <div className='grid place-content-between grid-cols-2 '>
                     <div className='flex items-center gap-3'>
                         <div className='bg-green-100 size-7 rounded-full grid place-content-center'>
 
                             <Mail className='text-xs text-green-700' size={15} />
                         </div>
-                        <span className='text-sm text-gray-400'>{post.author?.email}</span>
+                        <span className='text-xs text-gray-400'>{post.author?.email}</span>
                     </div>
-                    <div className='flex items-center gap-3'>
+                    <div className='flex items-center gap-3 ml-5'>
                         <div className='bg-green-100 size-7 rounded-full grid place-content-center'>
 
                             <Phone className='text-xs text-green-700' size={15} />
@@ -104,7 +104,7 @@ const Post: React.FC<PostProps> = ({ post, showActions, deletePost, deletePostLo
                 </div>
 
 
-                <div className='flex justify-between items-center'>
+                <div className='grid place-content-between grid-cols-2  '>
                     <div className='flex items-center gap-3'>
                         <div className='bg-green-100 size-7 rounded-full grid place-content-center'>
 
@@ -112,7 +112,7 @@ const Post: React.FC<PostProps> = ({ post, showActions, deletePost, deletePostLo
                         </div>
                         <span className='text-sm text-gray-400'>{post.author?.country}</span>
                     </div>
-                    <div className='flex items-center gap-3 '>
+                    <div className='flex items-center gap-3 ml-5'>
                         <div className='bg-green-100 size-7 rounded-full grid place-content-center'>
 
                             <Building2 className='text-xs text-green-700' size={15} />
