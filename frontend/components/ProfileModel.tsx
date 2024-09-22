@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useRef, useState } from "react";
 import Dialog from "./Dialog";
 import { toast } from "sonner";
@@ -33,7 +34,12 @@ const ProfileModel = ({ setOpenProfileModel }: { setOpenProfileModel: React.Disp
         if (file && file.type.match("image.*")) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImagePreviewUrl(reader.result);
+                if (typeof reader.result === 'string') {
+                    setImagePreviewUrl(reader.result);
+                } else {
+                    // Set to undefined if the result is not a string
+                    setImagePreviewUrl(undefined);
+                }
                 setUserInputs((values) => ({ ...values, profilePic: file }));
             };
             reader.readAsDataURL(file);
@@ -94,7 +100,14 @@ const ProfileModel = ({ setOpenProfileModel }: { setOpenProfileModel: React.Disp
                     name: dataFromApi.name,
                 };
 
-                localStorage.setItem("userInfo", JSON.stringify(tempUser));
+
+                if (typeof window !== 'undefined') {
+                    // Safe to use localStorage here
+                    localStorage.setItem("userInfo", JSON.stringify(tempUser));
+
+                } else {
+                    console.log('local storge is undefined...')
+                }
 
                 dispatch({ type: "SET_USER", payload: tempUser });
             }

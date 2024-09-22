@@ -16,8 +16,8 @@ import { useGlobalState } from '@/app/context/globalContext'
 interface PostProps {
     post: IPost;
     showActions: boolean;
-    deletePost: (id: string) => void;
-    deletePostLoading: boolean
+    deletePost?: (id: string) => void;
+    deletePostLoading?: boolean
 }
 
 const Post: React.FC<PostProps> = ({ post, showActions, deletePost, deletePostLoading }) => {
@@ -55,7 +55,7 @@ const Post: React.FC<PostProps> = ({ post, showActions, deletePost, deletePostLo
                         <DropdownMenuContent>
                             {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator /> */}
-                            <DropdownMenuItem className="cursor-pointer " onClick={() => deletePost(post._id)}>
+                            <DropdownMenuItem className="cursor-pointer " onClick={() => deletePost && deletePost(post._id)}>
                                 <Trash2 className="mr-2 h-4 w-4 text-red-500" />
                                 <span className='text-red-500'>{deletePostLoading ? "Deleting..." : "Delete"}</span>
                             </DropdownMenuItem>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner';
 import _axios from '@/app/config/axios.config'
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { ISignUpErrors, ISignUpInputs } from '@/app/interfaces';
 import validateInputs from '@/lib/validateInputs';
 
-const page = () => {
+const Page = () => {
     const router = useRouter()
     const [inputs, setInputs] = useState<ISignUpInputs>({
         name: '',
@@ -37,9 +37,7 @@ const page = () => {
         phoneNo: ''
     });
 
-    useEffect(() => {
-        console.log(inputs)
-    }, [inputs])
+
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.name;
@@ -297,4 +295,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

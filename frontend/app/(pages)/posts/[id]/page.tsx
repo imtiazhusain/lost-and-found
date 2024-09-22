@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { useGlobalState } from '@/app/context/globalContext';
 import ProtectedRoute from '@/components/ProtectedRoutes';
 
-const page = ({ params }: { params: { id: string } }) => {
+const Page = ({ params }: { params: { id: string } }) => {
     const { state } = useGlobalState()
     const [inputs, setInputs] = useState<IEditPostInputs>({
 
@@ -76,7 +76,7 @@ const page = ({ params }: { params: { id: string } }) => {
             }
         }
         fetchPostData()
-    }, [])
+    }, [state.user?.accessToken, params.id])
 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -326,4 +326,4 @@ const page = ({ params }: { params: { id: string } }) => {
     )
 }
 
-export default ProtectedRoute(page);
+export default ProtectedRoute(Page);

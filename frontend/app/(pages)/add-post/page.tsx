@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { useGlobalState } from '@/app/context/globalContext';
 import ProtectedRoute from '@/components/ProtectedRoutes';
 
-const page = () => {
+const Page = () => {
     const { state } = useGlobalState()
     const [inputs, setInputs] = useState<IAddPostInputs>({
 
@@ -284,4 +284,4 @@ const page = () => {
 }
 
 
-export default ProtectedRoute(page);
+export default ProtectedRoute(Page);

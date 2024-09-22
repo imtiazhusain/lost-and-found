@@ -38,7 +38,14 @@ const globalReducer = (state: IGlobal, action: IActionType): IGlobal => {
             // Ensure the payload is of type IUser or null before setting it
             return { ...state, user: action.payload as IUser | null };
         case "LOGOUT_USER":
-            localStorage.removeItem('userInfo')
+
+            if (typeof window !== 'undefined') {
+                // Safe to use localStorage here
+
+                localStorage.removeItem('userInfo')
+            } else {
+                console.log('local storge is undefined...')
+            }
             return { ...state, user: null };
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
@@ -48,7 +55,15 @@ const globalReducer = (state: IGlobal, action: IActionType): IGlobal => {
 export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
 
-    const userInfoString = localStorage.getItem("userInfo");
+    let userInfoString: string | null = null;
+    if (typeof window !== 'undefined') {
+        // Safe to use localStorage here
+        userInfoString = localStorage.getItem("userInfo");
+
+    } else {
+        console.log('local storge is undefined...')
+    }
+
     const userInfo = userInfoString !== null ? JSON.parse(userInfoString) as IUser : null;
 
     const [state, dispatch] = useReducer(globalReducer, {

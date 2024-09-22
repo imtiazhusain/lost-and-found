@@ -16,7 +16,7 @@ import ProtectedRoute from "@/components/ProtectedRoutes";
 
 
 
-const page = () => {
+const Page = () => {
     const [posts, setPosts] = useState<Array<IPost>>([])
     const [loading, setLoading] = useState(false)
     const { state } = useGlobalState()
@@ -72,7 +72,7 @@ const page = () => {
         fetchPosts()
 
 
-    }, [filterQuery])
+    }, [filterQuery, state.user?.accessToken])
 
 
 
@@ -175,4 +175,4 @@ const page = () => {
 
 
 
-export default ProtectedRoute(page);
+export default ProtectedRoute(Page);

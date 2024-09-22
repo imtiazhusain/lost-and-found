@@ -78,9 +78,7 @@ export default function Home() {
     setFilterQuery(pre => ({ ...pre, [name]: value }))
   }
 
-  useEffect(() => {
-    console.log(filterQuery)
-  }, [filterQuery])
+
 
 
   return (
@@ -93,7 +91,7 @@ export default function Home() {
         <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))]    gap-y-6 gap-x-5 lg:gap-x-8 place-content-center  place-items-center ">
           {loading ? <LoadingPosts /> : (
             posts?.length > 0 ?
-              posts.map(post => <Post post={post} showActions={false} />) :
+              posts.map(post => <Post post={post} showActions={false} key={post._id} />) :
               (
                 <span className="text-gray-500">No Posts Found</span>
 
